@@ -53,6 +53,66 @@ var InvalidBoardColumn1 = [9][9]int{
 	{0, 0, 1, 4, 7, 0, 0, 5, 6},
 }
 
+var MediumBoard = [9][9]int{
+	{0, 4, 0, 8, 1, 7, 6, 0, 2},
+	{0, 0, 6, 0, 0, 4, 1, 0, 5},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{4, 7, 0, 0, 2, 0, 0, 6, 8},
+	{0, 0, 0, 5, 8, 9, 0, 0, 3},
+	{0, 0, 0, 7, 0, 6, 9, 0, 1},
+	{0, 0, 0, 6, 3, 8, 7, 1, 9},
+	{0, 0, 7, 9, 0, 0, 2, 0, 4},
+	{0, 1, 0, 4, 7, 0, 8, 5, 0},
+}
+
+var HardBoard = [9][9]int{
+	{1, 0, 0, 0, 3, 4, 0, 0, 8},
+	{0, 7, 0, 6, 8, 0, 0, 3, 0},
+	{0, 0, 8, 2, 1, 0, 7, 0, 4},
+	{0, 5, 4, 0, 9, 0, 6, 8, 0},
+	{9, 1, 0, 5, 0, 8, 0, 2, 0},
+	{0, 8, 0, 3, 0, 0, 0, 0, 5},
+	{3, 0, 5, 9, 0, 6, 8, 7, 1},
+	{0, 0, 6, 0, 0, 0, 0, 4, 0},
+	{0, 0, 1, 0, 7, 0, 2, 0, 0},
+}
+
+var ExpertBoard = [9][9]int{
+	{1, 5, 0, 0, 8, 2, 0, 0, 0},
+	{3, 0, 0, 0, 7, 0, 0, 1, 0},
+	{0, 0, 0, 0, 0, 0, 7, 5, 3},
+	{0, 0, 0, 5, 2, 7, 6, 0, 9},
+	{0, 0, 0, 0, 0, 0, 5, 0, 0},
+	{0, 4, 0, 0, 6, 3, 8, 0, 7},
+	{4, 0, 0, 0, 0, 8, 0, 0, 0},
+	{7, 0, 3, 0, 4, 0, 1, 0, 0},
+	{0, 0, 8, 6, 0, 0, 3, 0, 0},
+}
+
+var MasterBoard = [9][9]int{
+	{0, 0, 9, 5, 8, 6, 0, 0, 0},
+	{0, 0, 0, 0, 2, 0, 0, 0, 0},
+	{4, 0, 0, 0, 0, 0, 6, 8, 3},
+	{9, 0, 0, 6, 5, 0, 0, 3, 2},
+	{0, 6, 0, 7, 0, 0, 0, 9, 8},
+	{0, 3, 0, 2, 0, 0, 7, 0, 4},
+	{0, 0, 3, 0, 0, 0, 0, 0, 0},
+	{6, 2, 0, 0, 1, 5, 0, 4, 0},
+	{0, 0, 0, 4, 0, 0, 0, 5, 0},
+}
+
+var ExtremeBoard = [9][9]int{
+	{3, 0, 0, 0, 4, 9, 0, 0, 0},
+	{0, 0, 0, 6, 0, 0, 5, 0, 1},
+	{7, 5, 2, 0, 0, 1, 0, 0, 0},
+	{0, 0, 1, 0, 0, 0, 7, 0, 0},
+	{5, 0, 0, 3, 9, 6, 0, 0, 0},
+	{0, 0, 8, 1, 5, 0, 0, 9, 6},
+	{0, 0, 3, 0, 1, 0, 0, 6, 0},
+	{0, 0, 4, 0, 0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 2, 8, 0, 0, 0},
+}
+
 var InvalidBoardBox1 = [9][9]int{
 	{9, 0, 0, 5, 0, 8, 0, 0, 7},
 	{0, 4, 0, 3, 0, 2, 9, 0, 5},
@@ -89,25 +149,35 @@ func FindFirstEmptyCell(board [9][9]int) (int, int) {
 	return -1, -1
 }
 
-func SolveViaBacktracking(board [9][9]int) (bool, [9][9]int) {
+func solveBacktrack(board [9][9]int) (bool, [9][9]int, int) {
+	executions := 1
 	emptyCellRow, emptyCellColumn := FindFirstEmptyCell(board)
 
 	if emptyCellRow == -1 || emptyCellColumn == -1 {
-		return true, board
+		return true, board, executions
 	}
 
 	for i := 1; i <= 9; i++ {
 		board[emptyCellRow][emptyCellColumn] = i
 		if IsBoardValid(board) {
-			solved, solvedBoard := SolveViaBacktracking(board)
+			solved, solvedBoard, subExecs := solveBacktrack(board)
+			executions += subExecs
 			if solved {
-				return true, solvedBoard
+				return true, solvedBoard, executions
 			}
 			board[emptyCellRow][emptyCellColumn] = 0
 		}
 	}
 
-	return false, board
+	return false, board, executions
+}
+
+func SolveViaBacktracking(board [9][9]int) (bool, [9][9]int, int) {
+	solved, solvedBoard, executions := solveBacktrack(board)
+	if !solved {
+		return false, solvedBoard, -1
+	}
+	return true, solvedBoard, executions
 }
 
 func IsBoardValid(board [9][9]int) bool {

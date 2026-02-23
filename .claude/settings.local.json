@@ -3,7 +3,8 @@
     "allow": [
       "Bash(ls:*)",
       "Bash(cd:*)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "Bash(cd:*\\\\)"
     ]
   }
 }
