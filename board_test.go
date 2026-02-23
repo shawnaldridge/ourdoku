@@ -1,16 +1,15 @@
-package ourdoku_test
+package main
 
 import (
 	"testing"
-	"ourdoku"
 )
 
 func TestPrintBoard(t *testing.T) {
-	ourdoku.PrintBoard(ourdoku.EasyBoard)
+	PrintBoard(EasyBoard)
 }
 
 func TestIsBoardValid(t *testing.T) {
-	if !ourdoku.IsBoardValid(ourdoku.EasyBoard) {
+	if !IsBoardValid(EasyBoard) {
 		t.Errorf("Board is not valid")
 	}
 }
@@ -18,24 +17,24 @@ func TestIsBoardValid(t *testing.T) {
 // add an invalid value in a row
 
 func TestInvalidRow(t *testing.T) {
-	board := ourdoku.InvalidBoardRow1
-	if ourdoku.IsBoardValid(board) {
+	board := InvalidBoardRow1
+	if IsBoardValid(board) {
 		t.Errorf("Board is valid but should be invalid")
 	}
 }
 
 // add an invalid value in a column
 func TestInvalidColumn(t *testing.T) {
-	board := ourdoku.InvalidBoardColumn1
-	if ourdoku.IsBoardValid(board) {
+	board := InvalidBoardColumn1
+	if IsBoardValid(board) {
 		t.Errorf("Board is valid but should be invalid")
 	}
 }
 
 // add an invalid value in a 3x3 box
 func TestInvalidBox(t *testing.T) {
-	board := ourdoku.InvalidBoardBox1
-	if ourdoku.IsBoardValid(board) {
+	board := InvalidBoardBox1
+	if IsBoardValid(board) {
 		t.Errorf("Board is valid but should be invalid")
 	}
 }

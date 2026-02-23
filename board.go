@@ -1,4 +1,4 @@
-package ourdoku
+package main
 
 import (
 	"fmt"
@@ -76,6 +76,38 @@ func PrintBoard(board [9][9]int) {
 		}
 		fmt.Println()
 	}
+}
+
+func FindFirstEmptyCell(board [9][9]int) (int, int) {
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			if board[i][j] == 0 {
+				return i, j
+			}
+		}
+	}
+	return -1, -1
+}
+
+func SolveViaBacktracking(board [9][9]int) (bool, [9][9]int) {
+	emptyCellRow, emptyCellColumn := FindFirstEmptyCell(board)
+
+	if emptyCellRow == -1 || emptyCellColumn == -1 {
+		return true, board
+	}
+
+	for i := 1; i <= 9; i++ {
+		board[emptyCellRow][emptyCellColumn] = i
+		if IsBoardValid(board) {
+			solved, solvedBoard := SolveViaBacktracking(board)
+			if solved {
+				return true, solvedBoard
+			}
+			board[emptyCellRow][emptyCellColumn] = 0
+		}
+	}
+
+	return false, board
 }
 
 func IsBoardValid(board [9][9]int) bool {
